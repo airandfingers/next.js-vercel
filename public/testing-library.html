@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<!-- saved from url=(0046)http://localhost:8000/testing-library.html#/29 -->
+<html class="reveal-full-page"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>@testing-library</title>
+    <link rel="stylesheet" href="./testing-library_files/reset.css">
+    <link rel="stylesheet" href="./testing-library_files/reveal.css">
+    <link rel="stylesheet" href="./testing-library_files/goblindegook.css" id="theme">
+    <link rel="stylesheet" href="./testing-library_files/monokai.css" id="highlight-theme">
+  <style id="dark-reader-style" type="text/css">@media screen {
+
+/* Leading rule */
+html {
+  -webkit-filter: invert(100%) hue-rotate(180deg) brightness(110%) contrast(90%) grayscale(20%) sepia(10%) !important;
+  filter: invert(100%) hue-rotate(180deg) brightness(110%) contrast(90%) grayscale(20%) sepia(10%) !important;
+}
+
+/* Reverse rule */
+img,
+video,
+:not(object):not(body)>embed,
+object,
+svg image,
+[style*="background:url"],
+[style*="background-image:url"],
+[style*="background: url"],
+[style*="background-image: url"],
+[background],
+twitterwidget {
+  -webkit-filter: invert(100%) hue-rotate(180deg) !important;
+  filter: invert(100%) hue-rotate(180deg) !important;
+}
+[style*="background:url"] *,
+[style*="background-image:url"] *,
+[style*="background: url"] *,
+[style*="background-image: url"] *,
+input,
+[background] *,
+img[src^="https://s0.wp.com/latex.php"],
+twitterwidget .NaturalImage-image {
+  -webkit-filter: none !important;
+  filter: none !important;
+}
+.compatibility-with-darkreader-below-4-3-3 {
+  background: white !important;
+}
+
+/* Text contrast */
+html {
+  text-shadow: 0 0 0 !important;
+}
+
+/* Full screen */
+:-webkit-full-screen, :-webkit-full-screen * {
+  -webkit-filter: none !important;
+  filter: none !important;
+}
+:-moz-full-screen, :-moz-full-screen * {
+  -webkit-filter: none !important;
+  filter: none !important;
+}
+:fullscreen, :fullscreen * {
+  -webkit-filter: none !important;
+  filter: none !important;
+}
+
+/* Page background */
+html {
+  background: rgb(255,255,255) !important;
+}
+
+/* Custom rules */
+.compatibility-with-darkreader-below-4-3-3 {
+    background: white !important;
+}
+
+}</style><style type="text/css">.hljs-ln{border-collapse:collapse}.hljs-ln td{padding:0}.hljs-ln-n:before{content:attr(data-line-number)}</style></head><span id="warning-container"><i data-reactroot=""></i></span>
+  <body class="reveal-viewport" style="--slide-width:960px; --slide-height:700px;">
+    <div class="reveal slide center focused has-horizontal-slides ready" role="application" data-transition-speed="default" data-background-transition="fade" style="">
+      <div class="slides" style="width: 960px; height: 700px; left: 50%; top: 50%; bottom: auto; right: auto; transform: translate(-50%, -50%) scale(0.838);">
+        <section style="top: 144px; display: none;" class="past" hidden="" aria-hidden="true">
+          <h1>@testing-library</h1>
+          <p><em>Or, how I learned to stop worrying about the DOM.</em></p>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+          <hr>
+          <p>LuxembourgJS · November 4, 2020</p>
+        </section>
+
+        <section style="top: 183.5px; display: none;" class="past" hidden="" aria-hidden="true">
+          <h2>Luís Rodrigues</h2>
+          <p>&nbsp;</p>
+          <p><a href="https://goblindegook.com/">goblindegook.com</a></p>
+          <p>
+            <a href="https://twitter.com/goblindegook"><img class="icon-twitter" src="./testing-library_files/twitter.svg" alt="Twitter">
+              @goblindegook</a>
+          </p>
+        </section>
+
+        <section style="top: 278px; display: none;" class="past" hidden="" aria-hidden="true">
+          <p>
+            Testing the frontend<br>
+            with confidence.
+          </p>
+
+          <aside class="notes">
+            <p>
+              The point of testing is to be able to develop, debug, and deploy
+              with confidence.
+            </p>
+            <p>Don't go chasing metrics or prescribed formulas.</p>
+            <p>Ask, "Does this test give me confidence?"</p>
+          </aside>
+        </section>
+
+        <section data-background-image="/assets/testing-library/drake-no.jpg" data-background-opacity="0.4" style="top: 183.5px; display: none;" class="past" hidden="" aria-hidden="true">
+          <h3>Browser Tests</h3>
+          <ul class="emoji">
+            <li data-emoji="❌">Convenient</li>
+            <li data-emoji="❌">Fast</li>
+            <li data-emoji="❌">Maintainable</li>
+            <li data-emoji="❌">Robust</li>
+          </ul>
+
+          <aside class="notes">
+            <p>
+              Tests are complicated and hard to setup, slow AF, with
+              (Cu)cumbersome changes, and break all the time.
+            </p>
+          </aside>
+        </section>
+
+        <section data-background-image="/assets/testing-library/drake-yes.jpg" data-background-opacity="0.4" style="top: 183.5px; display: none;" class="past" hidden="" aria-hidden="true">
+          <h3>React + Enzyme</h3>
+          <ul class="emoji">
+            <li data-emoji="✅">Convenient</li>
+            <li data-emoji="✅">Fast</li>
+            <li data-emoji="🤷‍♀️">Maintainable</li>
+            <li data-emoji="🤷‍♀️">Robust</li>
+          </ul>
+        </section>
+
+        <section style="top: 304px; display: none;" class="past" hidden="" aria-hidden="true">
+          <p>Shallow rendering.</p>
+
+          <aside class="notes">
+            Allows ‘testing isolated components’, and ensures tests aren’t
+            indirectly asserting on behavior of child components.
+          </aside>
+        </section>
+
+        <section style="top: 0px; display: none;" class="past" hidden="" aria-hidden="true">
+          <img src="./testing-library_files/shallow-rendering-1.svg" alt="Diagram of a form component with a file upload subcomponent with side effects.">
+        </section>
+
+        <section style="top: 0px; display: none;" class="past" hidden="" aria-hidden="true">
+          <img src="./testing-library_files/shallow-rendering-2.svg" alt="Diagram of a shallow rendered form component, the file upload subcomponent&#39;s effects aren&#39;t trigger.">
+        </section>
+
+        <section style="top: 215.5px; display: none;" class="past" hidden="" aria-hidden="true">
+          <h3>Too easy to test implementation details.</h3>
+
+          <ul>
+            <li>Shallow rendering.</li>
+            <li>Querying by component name or properties.</li>
+            <li>Component instance state inspection.</li>
+          </ul>
+
+          <aside class="notes">
+            Testing implementation details limits your ability to refactor.
+            Refactoring is one of the most important approaches to tackling tech
+            debt. You don’t want to have your hands tied here. If tests are
+            constantly breaking for no good reason, you’ll stop testing. Tests
+            with shallow rendering are prone to break when components or
+            component structure change, even if presentation and behaviour
+            remains the same.
+          </aside>
+        </section>
+
+        <section style="top: 286px; display: none;" class="past" hidden="" aria-hidden="true">
+          <ul class="emoji">
+            <li data-emoji="💔">Testing only via the browser.</li>
+            <li data-emoji="💔">Testing implementation details.</li>
+          </ul>
+
+          <aside class="notes">So what should we test?</aside>
+        </section>
+
+        <section data-background-image="/assets/testing-library/pyramid.jpg" style="top: 350px; display: none;" class="past" hidden="" aria-hidden="true">
+          <aside class="notes">
+            This wouldn't be a proper talk about tests if it didn't have the
+            pyramid.
+          </aside>
+        </section>
+
+        <section data-background-image="/assets/testing-library/pyramid.jpg" data-background-opacity="0.2" style="top: 232px; display: none;" class="past" hidden="" aria-hidden="true">
+          <p>Slow</p>
+          <p>↕</p>
+          <p>Fast</p>
+        </section>
+
+        <section data-background-image="/assets/testing-library/pyramid.jpg" data-background-opacity="0.2" style="top: 232px; display: none;" class="past" hidden="" aria-hidden="true">
+          <p>Expensive</p>
+          <p>↕</p>
+          <p>Cheap</p>
+        </section>
+
+        <section data-background-image="/assets/testing-library/pyramid.jpg" data-background-opacity="0.2" style="top: 232px; display: none;" class="past" hidden="" aria-hidden="true">
+          <p>Cooperation</p>
+          <p>↕</p>
+          <p>Single responsibility</p>
+        </section>
+
+        <section data-background-image="/assets/testing-library/pyramid.jpg" data-background-opacity="0.2" style="top: 232px; display: none;" class="past" hidden="" aria-hidden="true">
+          <p>Big picture</p>
+          <p>↕</p>
+          <p>Detail</p>
+        </section>
+
+        <section data-background-image="/assets/testing-library/pyramid.jpg" data-background-opacity="0.2" style="top: 232px; display: none;" class="past" hidden="" aria-hidden="true">
+          <p>Loose</p>
+          <p>↕</p>
+          <p>Precise</p>
+
+          <aside class="notes">Pressure on software design.</aside>
+        </section>
+
+        <section data-background-image="/assets/testing-library/pyramid.jpg" data-background-opacity="0.2" style="top: 232px; display: none;" class="past" hidden="" aria-hidden="true">
+          <p>Easy to refactor</p>
+          <p>↕</p>
+          <p>Hard to refactor</p>
+        </section>
+
+        <section data-background-image="/assets/testing-library/pyramid.jpg" data-background-opacity="0.2" style="top: 232px; display: none;" class="past" hidden="" aria-hidden="true">
+          <p>Hard to debug</p>
+          <p>↕</p>
+          <p>Easy to debug</p>
+        </section>
+
+        <section style="top: 305.5px; display: none;" class="past" hidden="" aria-hidden="true">
+          <h2>The messy middle</h2>
+
+          <aside class="notes">
+            The definitions of ‘unit test’ and ‘integration test’ are a bit
+            wishy-washy. And is it 'integration', 'integrated', 'service',
+            or...?
+          </aside>
+        </section>
+
+        <section style="top: 221px; display: none;" class="past" hidden="" aria-hidden="true">
+          <blockquote>
+            <p>“Write tests. Not too many. Mostly integration.”</p>
+            <cite>Guillermo Rauch</cite>
+          </blockquote>
+        </section>
+
+        <section style="top: 247px; display: none;" class="past" hidden="" aria-hidden="true">
+          <blockquote>
+            <p>“Integrated tests are a scam.”</p>
+            <cite>J.B. Rainsberger</cite>
+          </blockquote>
+        </section>
+
+        <section style="top: 304px; display: none;" class="past" hidden="" aria-hidden="true">
+          <p>A unit test must run in isolation.</p>
+
+          <aside class="notes">
+            Misconceptions slot neatly into Enzyme's antipatterns. Isolation
+            (according to Kent Beck) does not mean mock everything else. It
+            means the TEST ITSELF must be isolated. It should be able to run by
+            itself, in a sequence of tests, or even in parallel.
+          </aside>
+        </section>
+
+        <section style="top: 304px; display: none;" class="past" hidden="" aria-hidden="true">
+          <p>A unit test must be fast.</p>
+        </section>
+
+        <section style="top: 304px; display: none;" class="past" hidden="" aria-hidden="true">
+          <p>A unit test must focus on a ‘small’ part of the system.</p>
+
+          <aside class="notes">
+            ‘Small’ does not mean ‘smallest’. It's not about testing every
+            individual function or class of the system. The behaviour of the SUT
+            is what matters, not its size or complexity.
+          </aside>
+        </section>
+
+        <section style="top: 318px; display: none;" class="past" hidden="" aria-hidden="true">Testing from the outside-in.</section>
+
+        <section style="top: 215.5px; display: none;" class="past" hidden="" aria-hidden="true">
+          <h3>Stuff I don’t care about when doing TDD:</h3>
+          <ul>
+            <li>What subcomponents I’m going to need.</li>
+            <li>How they’re implemented.</li>
+            <li>Who implements them.</li>
+          </ul>
+
+          <aside class="notes">
+            Often subcombonents are a consequence of refactoring. Third party
+            dependencies.
+          </aside>
+        </section>
+
+        <section data-background-image="/assets/testing-library/mouth.jpg" data-background-opacity="0.3" style="top: 313px; display: none;" class="past" hidden="" aria-hidden="true">
+          <h2>Fake it till you break it</h2>
+        </section>
+
+        <section style="top: 247px; display: block;" class="past" hidden="" aria-hidden="true">
+          <blockquote>
+            <p>“Mocking is a code smell.”</p>
+            <cite>Eric Elliot</cite>
+          </blockquote>
+        </section>
+
+        <section style="top: 254px; display: block;" class="past" data-fragment="0" hidden="" aria-hidden="true">
+          <ul class="emoji">
+            <li data-emoji="💯">100% code coverage.</li>
+            <li data-emoji="✅">All tests are green.</li>
+            <li class="fragment fade-in visible" data-emoji="💩" data-fragment-index="0">
+              The application is still broken.
+            </li>
+          </ul>
+
+          <aside class="notes">
+            Shallow rendering/mocking is how you can have 100% test coverage
+            with a broken application. It's false confidence and you're missing
+            the point of tests.
+          </aside>
+        </section>
+
+        <section style="top: 268px; display: block;" class="present" data-fragment="-1">
+          <p>You don’t need to test third-party components.</p>
+          <p class="fragment fade-in" data-fragment-index="0">But maybe you should.</p>
+
+          <aside class="notes">
+            <p>
+              Tests should exercise integration with third party components
+              because you still need to ensure the application works. What’s the
+              point of having all green unit tests if some untested component or
+              integration breaks the application? Don’t fake or mock components
+              unless you’re doing it to avoid a) shared state that breaks test
+              isolation, b) slowness, or c) unpredictability.
+            </p>
+            <p>
+              Confidence comes from tests reproducing reality, and you can't
+              have it if your tests are overloaded with fakes.
+            </p>
+          </aside>
+        </section>
+
+        <section style="top: 195px; display: block;" hidden="" aria-hidden="true" class="future">
+          <blockquote>
+            <p>
+              “The more your tests resemble the way your software is used, the
+              more confidence they can give you.”
+            </p>
+            <cite>Kent C. Dodds</cite>
+          </blockquote>
+        </section>
+
+        <section style="top: 312px; display: block;" hidden="" aria-hidden="true" class="future">
+          <h2><a href="https://testing-library.com/">@testing-library</a></h2>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <h3>Like a browser test, but not</h3>
+          <p>An API that mimics user interaction.</p>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <h3>Less this</h3>
+          <pre><code data-trim="" data-lang="js" class="hljs reasonml"><span class="hljs-constructor">$('<span class="hljs-params">div</span>.<span class="hljs-params">login</span> .<span class="hljs-params">btn</span>-<span class="hljs-params">primary</span> + <span class="hljs-params">a</span>')</span>.click<span class="hljs-literal">()</span></code></pre>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <h3>More this</h3>
+          <pre><code data-trim="" data-lang="js" class="hljs reasonml">fireEvent.click(screen.get<span class="hljs-constructor">ByText(<span class="hljs-operator">/</span><span class="hljs-params">recover</span> <span class="hljs-params">password</span><span class="hljs-operator">/</span><span class="hljs-params">i</span>)</span>)</code></pre>
+
+          <aside class="notes">
+            testing-library improves on the traditional selector interface by
+            letting you use what the user experiences on the interface with
+            minimal ties to the document's element implementation (structure,
+            classes, IDs, etc).
+          </aside>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <table>
+            <tbody><tr>
+              <td style="text-align: right; vertical-align: middle">
+                <p>
+                  <code>get</code><br>
+                  <code>getAll</code>
+                </p>
+                <p>
+                  <code>query</code><br>
+                  <code>queryAll</code>
+                </p>
+                <p>
+                  <code>find</code><br>
+                  <code>findAll</code>
+                </p>
+              </td>
+              <td style="vertical-align: middle">+</td>
+              <td style="vertical-align: middle">
+                <p>
+                  <code>ByRole()</code><br>
+                  <code>ByLabelText()</code><br>
+                  <code>ByPlaceholderText()</code><br>
+                  <code>ByText()</code><br>
+                  <code>ByDisplayValue()</code><br>
+                  <code>ByAltText()</code><br>
+                  <code>ByTitle()</code>
+                </p>
+              </td>
+            </tr>
+          </tbody></table>
+
+          <aside class="notes">
+            Search by text or RegExp. No CSS selectors, you see what the user
+            sees. Link or button? Doesn’t matter!
+          </aside>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <ol>
+            <li><code>getByRole()</code></li>
+            <li><code>getByLabelText()</code></li>
+            <li><code>getByPlaceholderText()</code></li>
+            <li><code>getByText()</code></li>
+            <li><code>getByDisplayValue()</code></li>
+            <li><code>getByAltText()</code></li>
+            <li><code>getByTitle()</code></li>
+          </ol>
+
+          <aside class="notes">
+            The recommended order of queries to use. From accessible to
+            semantic. Alt text and title are not consistently handled by
+            assistive technologies.
+          </aside>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <h3>Escape hatch</h3>
+
+          <p><code>getByTestId()</code></p>
+
+          <aside class="notes">
+            Last resort if all else fails (dynamic text, etc.) It does not
+            overload other IDs or classes for testing.
+          </aside>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <h3>React</h3>
+          <pre><code data-trim="" data-noescape="" data-line-numbers="1,5-6" class="hljs routeros has-highlights"><table class="hljs-ln"><tbody><tr class="highlight-line"><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">import { render,<span class="hljs-built_in"> screen </span>} <span class="hljs-keyword">from</span> <span class="hljs-string">'@testing-library/react'</span></div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">import Component <span class="hljs-keyword">from</span> <span class="hljs-string">'./Component.jsx'</span></div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line"> </div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="4"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">test(<span class="hljs-string">'show the name'</span>, () =&gt; {</div></td></tr><tr class="highlight-line"><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="5"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">  render(&lt;Component <span class="hljs-attribute">name</span>=<span class="hljs-string">'Test Name'</span> /&gt;)</div></td></tr><tr class="highlight-line"><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="6"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">  screen.getByText(/Test Name/)</div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="7"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">})</div></td></tr></tbody></table></code></pre>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <h3>Plain HTML</h3>
+          <pre><code data-trim="" data-noescape="" data-line-numbers="1,9" class="hljs routeros has-highlights"><table class="hljs-ln"><tbody><tr class="highlight-line"><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">import {<span class="hljs-built_in"> screen </span>} <span class="hljs-keyword">from</span> <span class="hljs-string">'@testing-library/dom'</span></div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">import { compile } <span class="hljs-keyword">from</span> <span class="hljs-string">'handlebars'</span></div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">import template <span class="hljs-keyword">from</span> <span class="hljs-string">'./template.hbs'</span></div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="4"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line"> </div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="5"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">const render = compile(template)</div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="6"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line"> </div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="7"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">test(<span class="hljs-string">'show the name'</span>, () =&gt; {</div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="8"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">  document.innerHTML = render({ name: <span class="hljs-string">'Test Name'</span> })</div></td></tr><tr class="highlight-line"><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="9"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">  screen.getByText(/Test Name/)</div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="10"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">})</div></td></tr></tbody></table></code></pre>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <p>What you get back is DOM nodes.</p>
+
+          <aside class="notes">
+            No wrappers around React components. Reimplement the component in
+            Vue and you’ll barely need to touch tests.
+          </aside>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <pre><code data-trim="" class="hljs less"><span class="hljs-selector-tag">fireEvent</span><span class="hljs-selector-class">.click</span>(screen.getByText(<span class="hljs-string">'Click me!'</span>))</code></pre>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <pre><code data-trim="" data-noescape="" data-line-numbers="3" class="hljs lisp has-highlights"><table class="hljs-ln"><tbody><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">test('delete entry after animation', async () =&gt; {</div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">  const handleDelete = jest.fn()</div></td></tr><tr class="highlight-line"><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">  render(<span class="hljs-name">&lt;Entry</span> id='<span class="hljs-number">9999</span>' onDelete={handleDelete} /&gt;)</div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="4"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line"> </div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="5"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">  fireEvent.click(<span class="hljs-name">screen</span>.getByText(<span class="hljs-name">/Delete/i</span>))</div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="6"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">  fireEvent.click(<span class="hljs-name">await</span> screen.findByText(<span class="hljs-name">/Confirm/i</span>))</div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="7"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line"> </div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="8"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">  expect(<span class="hljs-name">handleDelete</span>).toHaveBeenCalledWith('<span class="hljs-number">9999</span>')</div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="9"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">})</div></td></tr></tbody></table></code><code data-trim="" data-noescape="" data-line-numbers="5-6" class="hljs lisp fragment has-highlights" data-fragment-index="0"><table class="hljs-ln"><tbody><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="1"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">test('delete entry after animation', async () =&gt; {</div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="2"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">  const handleDelete = jest.fn()</div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="3"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">  render(<span class="hljs-name">&lt;Entry</span> id='<span class="hljs-number">9999</span>' onDelete={handleDelete} /&gt;)</div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="4"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line"> </div></td></tr><tr class="highlight-line"><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="5"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">  fireEvent.click(<span class="hljs-name">screen</span>.getByText(<span class="hljs-name">/Delete/i</span>))</div></td></tr><tr class="highlight-line"><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="6"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">  fireEvent.click(<span class="hljs-name">await</span> screen.findByText(<span class="hljs-name">/Confirm/i</span>))</div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="7"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line"> </div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="8"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">  expect(<span class="hljs-name">handleDelete</span>).toHaveBeenCalledWith('<span class="hljs-number">9999</span>')</div></td></tr><tr><td class="hljs-ln-numbers"><div class="hljs-ln-line hljs-ln-n" data-line-number="9"></div></td><td class="hljs-ln-code"><div class="hljs-ln-line">})</div></td></tr></tbody></table></code></pre>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <p>Encourages <em>not</em> testing implementation details.</p>
+
+          <aside class="notes">
+            Beware the tradeoffs: Having to write many similar tests for input
+            combinations where one change might break multiple tests.
+          </aside>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <p>Promotes good accessibility practices.</p>
+
+          <aside class="notes">
+            By not providing CSS node selectors, it encourages adoption of
+            correct ARIA roles, and clear, unambiguous text.
+          </aside>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">Concise and lightweight.</section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <a href="https://testing-playground.com/">testing-playground.com</a>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <h3>Frameworks</h3>
+          <ul>
+            <li>Angular</li>
+            <li>React (Native)</li>
+            <li>Preact</li>
+            <li>Svelte</li>
+            <li>Vue</li>
+          </ul>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <h3>Upgrades your testing tools</h3>
+          <ul>
+            <li>Cypress</li>
+            <li>Puppeteer</li>
+            <li>TestCafe</li>
+          </ul>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <ul class="emoji">
+            <li data-emoji="❤️">Delightful user-centric API.</li>
+            <li data-emoji="❤️">Discourages testing implementation details.</li>
+            <li data-emoji="❤️">Promotes creating accessible frontends.</li>
+          </ul>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <p>Learn the tradeoffs.</p>
+
+          <aside class="notes">
+            Not a silver bullet. Consider the tradeoffs. The further up the
+            render tree you go, and the further up the pyramid you go, the more
+            careful you’ll have to be to avoid duplication, brittleness, and
+            ambiguity.
+          </aside>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <p>Test with <em>confidence</em>.</p>
+
+          <aside class="notes">
+            <p>
+              One thing I'm grateful to testing-library for is that it forced me
+              not only to rethink <em>how</em> I write tests, but <em>why</em> I
+              write them.
+            </p>
+            <p>
+              The point of testing is to be able to develop, debug, and deploy
+              with confidence. We don't write tests for the sake of having
+              tests. If a test doesn't give you confidence, or add to the
+              confidence you already have, do you need it?
+            </p>
+          </aside>
+        </section>
+
+        <section style="top: 350px; display: none;" hidden="" aria-hidden="true" class="future">
+          <p>That is all.</p>
+
+          <h1>Thank you</h1>
+
+          <p>&nbsp;</p>
+
+          <p><a href="https://goblindegook.com/">goblindegook.com</a></p>
+          <p>
+            <a href="https://twitter.com/goblindegook"><img class="icon-twitter" src="./testing-library_files/twitter.svg" alt="Twitter">
+              @goblindegook</a>
+          </p>
+        </section>
+      </div>
+      <footer class="contact">
+        <a href="https://twitter.com/goblindegook">@goblindegook</a>
+      </footer>
+    <div class="backgrounds"><div class="slide-background past" data-loaded="true" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background past" data-loaded="true" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background past" data-loaded="true" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background past" data-background-hash="0/assets/testing-library/drake-no.jpgnullnullnullnullnullnull0.4" style="display: none;" data-loaded="true"><div class="slide-background-content" style="opacity: 0.4; background-image: url(&quot;/assets/testing-library/drake-no.jpg&quot;);"></div></div><div class="slide-background past" data-background-hash="0/assets/testing-library/drake-yes.jpgnullnullnullnullnullnull0.4" style="display: none;" data-loaded="true"><div class="slide-background-content" style="opacity: 0.4; background-image: url(&quot;/assets/testing-library/drake-yes.jpg&quot;);"></div></div><div class="slide-background past" style="display: none;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background past" style="display: none;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background past" style="display: none;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background past" style="display: none;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background past" style="display: none;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background past" data-background-hash="0/assets/testing-library/pyramid.jpgnullnullnullnullnullnullnull" style="display: none;" data-loaded="true"><div class="slide-background-content" style="background-image: url(&quot;/assets/testing-library/pyramid.jpg&quot;);"></div></div><div class="slide-background past" data-background-hash="0/assets/testing-library/pyramid.jpgnullnullnullnullnullnull0.2" style="display: none;" data-loaded="true"><div class="slide-background-content" style="opacity: 0.2; background-image: url(&quot;/assets/testing-library/pyramid.jpg&quot;);"></div></div><div class="slide-background past" data-background-hash="0/assets/testing-library/pyramid.jpgnullnullnullnullnullnull0.2" style="display: none;" data-loaded="true"><div class="slide-background-content" style="opacity: 0.2; background-image: url(&quot;/assets/testing-library/pyramid.jpg&quot;);"></div></div><div class="slide-background past" data-background-hash="0/assets/testing-library/pyramid.jpgnullnullnullnullnullnull0.2" style="display: none;" data-loaded="true"><div class="slide-background-content" style="opacity: 0.2; background-image: url(&quot;/assets/testing-library/pyramid.jpg&quot;);"></div></div><div class="slide-background past" data-background-hash="0/assets/testing-library/pyramid.jpgnullnullnullnullnullnull0.2" style="display: none;" data-loaded="true"><div class="slide-background-content" style="opacity: 0.2; background-image: url(&quot;/assets/testing-library/pyramid.jpg&quot;);"></div></div><div class="slide-background past" data-background-hash="0/assets/testing-library/pyramid.jpgnullnullnullnullnullnull0.2" style="display: none;" data-loaded="true"><div class="slide-background-content" style="opacity: 0.2; background-image: url(&quot;/assets/testing-library/pyramid.jpg&quot;);"></div></div><div class="slide-background past" data-background-hash="0/assets/testing-library/pyramid.jpgnullnullnullnullnullnull0.2" style="display: none;" data-loaded="true"><div class="slide-background-content" style="opacity: 0.2; background-image: url(&quot;/assets/testing-library/pyramid.jpg&quot;);"></div></div><div class="slide-background past" data-background-hash="0/assets/testing-library/pyramid.jpgnullnullnullnullnullnull0.2" style="display: none;" data-loaded="true"><div class="slide-background-content" style="opacity: 0.2; background-image: url(&quot;/assets/testing-library/pyramid.jpg&quot;);"></div></div><div class="slide-background past" style="display: none;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background past" style="display: none;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background past" style="display: none;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background past" style="display: none;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background past" style="display: none;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background past" style="display: none;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background past" style="display: none;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background past" style="display: none;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background past" data-background-hash="0/assets/testing-library/mouth.jpgnullnullnullnullnullnull0.3" style="display: none;" data-loaded="true"><div class="slide-background-content" style="opacity: 0.3; background-image: url(&quot;/assets/testing-library/mouth.jpg&quot;);"></div></div><div class="slide-background past" style="display: block;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background past" style="display: block;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background present" style="display: block;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: block;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: block;" data-loaded="true"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background future" style="display: none;"><div class="slide-background-content"></div></div></div><div class="slide-number" style="display: none;"></div><aside class="controls" data-controls-layout="bottom-right" data-controls-back-arrows="faded" style="display: block;"><button class="navigate-left enabled" aria-label="previous slide"><div class="controls-arrow"></div></button>
+			<button class="navigate-right enabled fragmented" aria-label="next slide"><div class="controls-arrow"></div></button>
+			<button class="navigate-up" aria-label="above slide" disabled="disabled"><div class="controls-arrow"></div></button>
+			<button class="navigate-down" aria-label="below slide" disabled="disabled"><div class="controls-arrow"></div></button></aside><div class="progress" style="display: block;"><span style="transform: scaleX(0.557692);"></span></div><div class="speaker-notes" data-prevent-swipe="" tabindex="0"></div><div class="pause-overlay"><button class="resume-button">Resume presentation</button></div><div class="aria-status" aria-live="polite" aria-atomic="true" style="position: absolute; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px);">You don’t need to test third-party components. But maybe you should. </div></div>
+
+    <script src="./testing-library_files/reveal.js.download"></script>
+    <script src="./testing-library_files/notes.js.download"></script>
+    <script src="./testing-library_files/highlight.js.download"></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        plugins: [RevealHighlight, RevealNotes],
+      })
+    </script>
+  <script src="./testing-library_files/livereload.js.download" async="" defer=""></script>
+
+</body></html>
